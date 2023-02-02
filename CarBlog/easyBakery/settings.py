@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 
+import pymysql 
+pymysql.install_as_MySQLdb()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +27,7 @@ SECRET_KEY = 'django-insecure-%ov0!-+@ep*6swauhm@@zfd8ts-ft&6+@)c5^q69-xxzte763y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.pythonanywhere.com']
+ALLOWED_HOSTS = ['.pythonanywhere.com', '127.0.0.1']
 
 
 # Application definition
@@ -40,6 +42,9 @@ INSTALLED_APPS = [
     'blog',
     'crispy_forms',
     'rest_framework',
+    'django_extensions',
+    'chartjs',
+    
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -82,7 +87,18 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    },
+    'users':{  
+        'ENGINE': 'django.db.backends.mysql',  
+        'NAME': 'invoicing',  
+        'USER': 'root',  
+        'PASSWORD': '',  
+        'HOST': '127.0.0.1',  
+        'PORT': '3306',  
+        'OPTIONS': {  
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"  
+        }  
+    } 
 }
 
 

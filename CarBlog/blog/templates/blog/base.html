@@ -29,7 +29,6 @@
     />
     <!-- Core theme CSS (includes Bootstrap) -->
     <link href="{% static 'css/styles.css'%}" rel="stylesheet" />
-    
   </head>
   <body>
     <!-- Responsive navbar-->
@@ -86,8 +85,21 @@
                 >About Me</a
               >
             </li>
+            {% url 'uploadForm' as url %}
             <li class="nav-item active">
-              <a class="nav-link" href="#!">Services</a>
+              <a
+                class="nav-link {% if request.path == url%} active {% endif %}"
+                href="{% url 'uploadForm'%}"
+                >Upload CSV</a
+              >
+            </li>
+            {% url 'showCharts' as url %}
+            <li class="nav-item active">
+              <a
+                class="nav-link {% if request.path == url%} active {% endif %}"
+                href="{% url 'showCharts'%}"
+                >Charts</a
+              >
             </li>
           </ul>
         </div>

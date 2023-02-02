@@ -1,20 +1,25 @@
 from django.urls import path, include
 from . import view
 from django.contrib.auth import views
-
+from django.conf.urls import url
 
 from rest_framework import routers
 
+
+
 urlpatterns = [
-    path('', view.post_list, name='post_list'),
+    path('', view.home, name='home'),
     path('home/', view.home, name='home'),
     
     path("register/", view.register, name="register"),
     path('login/', view.user_login, name='login'),
     
+    
+    
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('resume/', view.resume, name='resume'),
-    
+    path('upload/', view.uploadForm, name='uploadForm'),
+    path('Charts/', view.showCharts, name='showCharts'),
     
     
     # post/ means that the URL should begin with the word post followed by a /. So far so good.
