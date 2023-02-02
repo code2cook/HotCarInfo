@@ -1,7 +1,7 @@
 from django.urls import path, include
 from . import view
 from django.contrib.auth import views
-from django.conf.urls import url
+
 
 from rest_framework import routers
 
