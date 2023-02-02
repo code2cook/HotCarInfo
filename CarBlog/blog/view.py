@@ -108,48 +108,32 @@ def user_login(request):
     return render(request=request, template_name="blog/login.html", context={'form': form})
 
 
-        
-        
 def uploadForm(request):
+    data = {}
     if "GET" == request.method:
-        return render(request, "blog/upload.html")
+        return render(request, "upload.html", data)
     # if not GET, then proceed
-    workpath = os.path.dirname(__file__)
-    file_path = os.path.join(workpath, 'Car_sales.csv')
-    #form = DataImportForm(request.POST, request.FILES)
-    
-    file = open(file_path)
-    file_data = csv.reader(file)
-    next(file_data)
-    csv_file = request.FILES["csv_file"]
+    try:
+        csv_file = request.FILES["csv_file"]
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request,'File is not CSV type')
+            return HttpResponseRedirect(reverse("myapp:upload_csv"))
+        #if file is too large, return
+        if csv_file.multiple_chunks():
+            messages.error(request,"Uploaded file is too big (%.2f MB)." % (csv_file.size/(1000*1000),))
+            return HttpResponseRedirect(reverse("myapp:upload_csv"))
 
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request,'File is not CSV type')
-        return HttpResponseRedirect(reverse("uploadForm"))
-    i = 0
-    for line in file_data:	   
+        file_data = csv_file.read().decode("utf-8")		
+
+        lines = file_data.split("\n")
+        print(lines)
+        #loop over the lines and save them in db. If error , store as string and then display
         
-        new_data =CarSales.objects.create(
-            Manufacturer = line[0],
-            Model = line[1],
-            Sales_in_thousands = line[2],
-            Price_in_thousands = line[3],
-            Engine_size = line[4],
-            Horsepower = line[5],
-            Fuel_efficiency = line[6],
-        )
-        i += 1
-        try:
-            new_data.save()
-        except:
-            print ("there was a problem with line", i)
-        
-        
-        #print(CarSales.objects.filter(Manufacturer='Toyota'))
-    
-    carData = CarSales.objects.all()
-    carData_python = list(carData.values())        
-    return render(request, 'blog/upload.html', {'car':carData_python})
+    except Exception as e:
+        logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
+        messages.error(request,"Unable to upload file. "+repr(e))
+
+    return render(request, 'blog/upload.html', context={'car':"this file is uploaded"})
 
 def showCharts(request):
     labels = []
@@ -168,4 +152,6 @@ def showCharts(request):
         'data': data,
     })
      
+     
+
  
