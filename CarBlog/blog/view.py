@@ -119,7 +119,7 @@ def uploadForm(request):
         csv_file = request.FILES["csv_file"]
         if not csv_file.name.endswith('.csv'):
             messages.error(request,'File is not CSV type')
-            return HttpResponseRedirect(reverse("blog/upload.html"))
+            return render(request, 'blog/upload.html',context={'csv_data': "this is not an csv file"})
         #if file is too large, return
         if csv_file.multiple_chunks():
             messages.error(request,"Uploaded file is too big (%.2f MB)." % (csv_file.size/(1000*1000),))
@@ -132,10 +132,7 @@ def uploadForm(request):
             return render(request, 'blog/upload.html',context={'csv_data': table_data})
         except:
             return render(request, 'blog/upload.html',context={'csv_data': "this csv file has no header please upload csv file with header"})
-       
-       
 
-       
 
     except Exception as e:
         logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
@@ -143,23 +140,34 @@ def uploadForm(request):
 
     return render(request, 'blog/upload.html',context={'csv_data': table_data})
 
-def showCharts(request):
+def show_Charts(request,name):
     labels = []
     data = []
+    if name == "most_car_sold":
+        queryset = CarSales.objects.order_by('Sales_in_thousands')[:5]
 
-    queryset = CarSales.objects.order_by('Sales_in_thousands')[:5]
+    elif name == "most_expensive_sold":
+        queryset = CarSales.objects.order_by('Price_in_thousands')[:5]
     
+    elif name == "most_fuel_effiction":
+        queryset = CarSales.objects.order_by('Fuel_efficiency')[:5]
+        
     for car in queryset:
         labels.append(car.Model)
         data.append(float(car.Sales_in_thousands))
         
-
-    
     return render(request, 'blog/showCharts.html', {
         'labels': labels,
         'data': data,
     })
-     
-     
+        
+    
 
- 
+
+def showCharts(request):
+  
+    if "GET" == request.method:
+       # print("this is the name {}".format(name))
+        return render(request, "blog/showCharts.html")
+    elif "POST" == request.method:
+        return render(request, "blog/showCharts.html")

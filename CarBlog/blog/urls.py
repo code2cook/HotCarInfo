@@ -20,6 +20,7 @@ urlpatterns = [
     path('resume/', view.resume, name='resume'),
     path('upload/', view.uploadForm, name='uploadForm'),
     path('Charts/', view.showCharts, name='showCharts'),
+    path('Charts/<str:name>',view.show_Charts, name='show_Charts'),
     
     
     # post/ means that the URL should begin with the word post followed by a /. So far so good.

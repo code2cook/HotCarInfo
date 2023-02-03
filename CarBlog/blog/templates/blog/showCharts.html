@@ -1,53 +1,82 @@
-{% extends 'blog/home.html' %} {% load static %} {% block content %}
+{% extends 'blog/base.html' %} {% load static %} {% block content %}
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+<div class="btn-group" style="margin-bottom: 200px;">
+  <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    click to show car sale charts
+  </button>
+  <div class="dropdown-menu" name="choose">
+    <a class="dropdown-item" href='/Charts/most_car_sold' value="most car sold" >most car sold</a>
+    <a class="dropdown-item" href='/Charts/most_expensive_sold' value="most car sold">most expensive sold</a>
+    <a class="dropdown-item" href='/Charts/most_fuel_effiction'>most fuel effiction</a>
+   
+  </div>
+</div>
+
+
 <div id="container" style="width: 75%">
+
   <canvas id="bar-chart"></canvas>
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
 <script>
 
-    
-    var data = {
-        labels: {{labels|safe}},
-        datasets: [{
-        label: 'Car Sales',
-        data: {{data|safe}},
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(255, 159, 64, 0.2)',
-          'rgba(255, 205, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
+  
+  var data = {
+      labels: {{labels|safe}},
+      datasets: [{
+      label: 'Car Sales',
+      data: {{data|safe}},
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(255, 205, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
 
-        ],
-        borderColor: [
-          'rgb(255, 99, 132)',
-          'rgb(255, 159, 64)',
-          'rgb(255, 205, 86)',
-          'rgb(75, 192, 192)',
-          'rgb(54, 162, 235)',
+      ],
+      borderColor: [
+        'rgb(255, 99, 132)',
+        'rgb(255, 159, 64)',
+        'rgb(255, 205, 86)',
+        'rgb(75, 192, 192)',
+        'rgb(54, 162, 235)',
 
-        ],
-        borderWidth: 1
-       }]
-      };
-
-    var config = {
-      type: 'bar',
-      data: data,
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      },
+      ],
+      borderWidth: 1
+     }]
     };
 
-    window.onload = function() {
-        var ctx = document.getElementById('bar-chart').getContext('2d');
-        window.myPie = new Chart(ctx, config);
-      };
+  var config = {
+    type: 'bar',
+    data: data,
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    },
+  };
+
+  window.onload = function() {
+      var ctx = document.getElementById('bar-chart').getContext('2d');
+      window.myPie = new Chart(ctx, config);
+    };
 </script>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+
 {% endblock%}
