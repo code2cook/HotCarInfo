@@ -41,6 +41,8 @@ from django.contrib import messages
 
 from .forms import DataImportForm
 
+import pandas as pd
+
 
 
 
@@ -111,29 +113,27 @@ def user_login(request):
 def uploadForm(request):
     data = {}
     if "GET" == request.method:
-        return render(request, "upload.html", data)
+        return render(request, "blog/upload.html", data)
     # if not GET, then proceed
     try:
         csv_file = request.FILES["csv_file"]
         if not csv_file.name.endswith('.csv'):
             messages.error(request,'File is not CSV type')
-            return HttpResponseRedirect(reverse("myapp:upload_csv"))
+            return HttpResponseRedirect(reverse("blog/upload.html"))
         #if file is too large, return
         if csv_file.multiple_chunks():
             messages.error(request,"Uploaded file is too big (%.2f MB)." % (csv_file.size/(1000*1000),))
-            return HttpResponseRedirect(reverse("myapp:upload_csv"))
+            return HttpResponseRedirect(reverse("blog/upload.html"))
+       
+        df=pd.read_csv(csv_file)
 
-        file_data = csv_file.read().decode("utf-8")		
+        csv_data = pd.DataFrame(data=df)
 
-        lines = file_data.split("\n")
-        print(lines)
-        #loop over the lines and save them in db. If error , store as string and then display
-        
     except Exception as e:
         logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
         messages.error(request,"Unable to upload file. "+repr(e))
 
-    return render(request, 'blog/upload.html', context={'car':"this file is uploaded"})
+    return render(request, 'blog/upload.html',context={'csv_data': csv_data.to_html()})
 
 def showCharts(request):
     labels = []
