@@ -124,16 +124,24 @@ def uploadForm(request):
         if csv_file.multiple_chunks():
             messages.error(request,"Uploaded file is too big (%.2f MB)." % (csv_file.size/(1000*1000),))
             return HttpResponseRedirect(reverse("blog/upload.html"))
+        
+        try:
+            df = pd.read_csv(csv_file,encoding='ISO-8859-1')
+            csv_data = pd.DataFrame(data=df)
+            table_data = csv_data.to_html() 
+            return render(request, 'blog/upload.html',context={'csv_data': table_data})
+        except:
+            return render(request, 'blog/upload.html',context={'csv_data': "this csv file has no header please upload csv file with header"})
        
-        df=pd.read_csv(csv_file)
+       
 
-        csv_data = pd.DataFrame(data=df)
+       
 
     except Exception as e:
         logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
         messages.error(request,"Unable to upload file. "+repr(e))
 
-    return render(request, 'blog/upload.html',context={'csv_data': csv_data.to_html()})
+    return render(request, 'blog/upload.html',context={'csv_data': table_data})
 
 def showCharts(request):
     labels = []
